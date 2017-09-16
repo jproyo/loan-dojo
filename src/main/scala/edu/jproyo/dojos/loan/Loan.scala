@@ -1,5 +1,7 @@
 package edu.jproyo.dojos.loan
 
+import edu.jproyo.dojos.loan.data.DataLoader
+
 case class Condition(amountRequested: Int, rate: Double, monthlyRepayment: Double, totalRepayment: Double)
 case class Lender(name: String, rate: Double, available: Int)
 
@@ -16,10 +18,6 @@ case class Loan(lenders: Set[Lender]) {
 }
 
 object Loan {
-
-  val defaultData = Set[Lender]()
-  def apply(): Loan = Loan(defaultData)
-
-
+  def apply(): Loan = Loan(implicitly[DataLoader].loadData)
 }
 
