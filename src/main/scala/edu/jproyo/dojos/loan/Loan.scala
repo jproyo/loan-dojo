@@ -18,12 +18,16 @@ case class Loan(lenders: Set[Lender]) {
 
   implicit val calculator = monthlyCompoundInterest
 
+  implicit val ordering = new Ordering[Lender] {
+    override def compare(x: Lender, y: Lender): Int = -(x.available.compareTo(y.available))
+  }
+
   /**
     * Lenders group by rate order from lowest rate to highest
     *
     * @return
     */
-  def lendersGroupByRate: ListMap[Double, Set[Lender]] = ListMap((lenders groupBy(_.rate)).toSeq.sortBy(_._1):_*)
+  def lendersGroupByRate: Map[Double, Set[Lender]] = ListMap((lenders groupBy(_.rate)).toSeq.sortBy(_._1):_*).map( p => p._1 -> p._2.toList.sorted.toSet )
 
 
   /**
