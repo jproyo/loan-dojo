@@ -16,9 +16,25 @@ case class Loan(lenders: Set[Lender]) {
 
   def lendersGroupByRate: ListMap[Double, Set[Lender]] = ListMap((lenders groupBy(_.rate)).toSeq.sortBy(_._1):_*)
 
-  def elegibleLenders(amount: Int): Option[Set[Lender]] = ???
+  def takeElegibles(amount: Int): (Set[Lender], (Double, Set[Lender])) => Set[Lender] = (lendersAcc, rateLender) => {
+    def lendersAcc(acc: Set[Lender], lenders: List[Lender], amountRequested: Int): Set[Lender] = {
+      if (amount == 0) acc
+      else lenders match {
+        case Nil => acc
+        case x :: xs => lendersAcc( acc + x, xs, math.abs(amount - x.available))
+      }
+    }
+    lendersAcc(Set(), rateLender._2.toList, amount)
+  }
 
-  def conditionFrom(amount: Int): (Set[Lender]) => Option[Condition] = ???
+  def elegibleLenders(amount: Int): Option[Set[Lender]] = {
+    val elegibles = (lendersGroupByRate foldLeft Set[Lender]()) (takeElegibles(amount))
+    if (elegibles.foldLeft(0)((acc, e) => acc + e.available) >= amount) Some(elegibles) else None
+  }
+
+  def conditionFrom(amount: Int): (Set[Lender]) => Option[Condition] = lenders => {
+    Some(Condition(amount,0.0,0.0,0.0))
+  }
 
   /**
     * Find best rates for this requested amount
@@ -42,6 +58,11 @@ case class Loan(lenders: Set[Lender]) {
 }
 
 object Loan {
+  /**
+    * Factory Loan Object Companion
+    * @param loader
+    * @return
+    */
   def apply()(implicit loader: DataLoader): Loan = Loan(loader.loadData)
 }
 
