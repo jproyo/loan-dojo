@@ -20,6 +20,8 @@ class LoanSuite extends FunSuite{
     assert(Loan().lendersGroupByRate === expected)
   }
 
+  480*math.pow((1+(0.069/12)),36) + 520*math.pow((1+(0.071/12)),36) + 60*math.pow((1+(0.071/12)),36)+ 140*math.pow((1+(0.074/12)),36) + 300*math.pow((1+(0.075/12)),36)
+
   test("test elegibles fro 1000"){
     val expected = List(Lender("Jane",0.069,480), Lender("Fred",0.071,520))
     assert(Loan().elegibles(1000) === expected)

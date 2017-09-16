@@ -22,6 +22,24 @@ class LoanSpec extends WordSpec with Matchers {
         condition.get should equal(Condition(amountRequested = 1500, rate = 0.072, monthlyRepayment = 51.59, totalRepayment = 1857.39))
       }
     }
+
+    "request not enough founds" should {
+      "return loan None" in {
+        val condition = Loan().request(4000)
+        condition shouldBe empty
+      }
+    }
+
+    "request above boundaries" should {
+      "throw exception" in {
+        assertThrows[IllegalArgumentException] {
+          Loan().request(999)
+        }
+        assertThrows[IllegalArgumentException] {
+          Loan().request(15001)
+        }
+      }
+    }
   }
 
 }
