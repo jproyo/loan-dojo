@@ -18,10 +18,8 @@ case class Loan(lenders: Set[Lender]) {
 object Loan {
 
   val defaultData = Set[Lender]()
-
   def apply(): Loan = Loan(defaultData)
 
-  def request(amount: Int): Option[Condition] = this().request(amount)
 
 }
 
