@@ -52,7 +52,7 @@ There are 3 options to run the solution
 
 ### With Binary Executable File
 
-Check out release tag v1.0 from Github [repo at here]()
+Check out release tag v1.0 from Github [repo at here](https://github.com/jproyo/loan-dojo/releases)
 
 ### With Scala SBT
 
