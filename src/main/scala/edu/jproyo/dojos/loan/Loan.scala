@@ -27,7 +27,7 @@ case class Loan(lenders: Set[Lender]) {
     *
     * @return
     */
-  def lendersGroupByRate: Map[Double, Set[Lender]] = ListMap((lenders groupBy(_.rate)).toSeq.sortBy(_._1):_*).map( p => p._1 -> p._2.toList.sorted.toSet )
+  lazy val lendersGroupByRate: Map[Double, Set[Lender]] = ListMap((lenders groupBy(_.rate)).toSeq.sortBy(_._1):_*).map( p => p._1 -> p._2.toList.sorted.toSet )
 
 
   /**
@@ -37,25 +37,21 @@ case class Loan(lenders: Set[Lender]) {
     * @return
     */
   def elegibleLenders(amount: Int): Option[Set[Lender]] = {
-    val elegibles = (lendersGroupByRate foldLeft (Set[Lender]())) (takeElegibles(amount))
-    if (elegibles.foldLeft(0)((acc, e) => acc + e.available) >= amount) Some(elegibles) else None
+    val eleg = elegibles(amount)
+    if (eleg.foldLeft(0)((acc, e) => acc + e.available) >= amount) Some(eleg) else None
   }
 
+  def elegibles(amount: Int): Set[Lender] = {
+    (lendersGroupByRate.map(_._2).flatten.foldLeft(((Set[Lender](), amount)))(takeElegibles))._1
+  }
   /**
-    * Helper tail recursive method
-    * @param amount
+    * Helper method
     * @return
     */
-  private def takeElegibles(amount: Int): (Set[Lender], (Double, Set[Lender])) => Set[Lender] = (lendersAcc, rateLender) => {
-    @tailrec
-    def lendersAcc(acc: Set[Lender], lenders: List[Lender], amountRequested: Int): Set[Lender] = {
-      if (amount == 0) acc
-      else lenders match {
-        case Nil => acc
-        case x :: xs => lendersAcc( acc + x, xs, math.abs(amount - x.available))
-      }
-    }
-    lendersAcc(Set(), rateLender._2.toList, amount)
+  private def takeElegibles(accLender: (Set[Lender], Int), rateLender: Lender): (Set[Lender], Int) = {
+    val (acc, amount) = accLender
+    if (amount == 0) accLender
+    else if (amount >= rateLender.available) (acc + rateLender, amount - rateLender.available) else accLender
   }
 
   /**
