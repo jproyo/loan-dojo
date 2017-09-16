@@ -2,6 +2,8 @@ package edu.jproyo.dojos.loan
 
 import edu.jproyo.dojos.loan.data.DataLoader
 
+import scala.collection.immutable.ListMap
+
 case class Condition(amountRequested: Int, rate: Double, monthlyRepayment: Double, totalRepayment: Double)
 case class Lender(name: String, rate: Double, available: Int)
 
@@ -12,9 +14,20 @@ case class Loan(lenders: Set[Lender]) {
     override def compare(x: Lender, y: Lender) = x.available.compare(y.available)
   }
 
-  def lendersGroupByRate: Map[Double, List[Lender]] = lenders.toList.sorted groupBy(_.rate)
+  def lendersGroupByRate: ListMap[Double, Set[Lender]] = ListMap((lenders groupBy(_.rate)).toSeq.sortBy(_._1):_*)
 
-  def findBestCondition(amount: Int): Option[Condition] = ???
+  def elegibleLenders(amount: Int): Option[Set[Lender]] = ???
+
+  def conditionFrom(amount: Int): (Set[Lender]) => Option[Condition] = ???
+
+  /**
+    * Find best rates for this requested amount
+    *
+    * @param amount
+    * @return
+    */
+  def findBestCondition(amount: Int): Option[Condition] =
+    elegibleLenders(amount).flatMap(conditionFrom(amount))
 
   /**
     * Request an amount to be borrowed by one or more lenders at the lowest rate posible
