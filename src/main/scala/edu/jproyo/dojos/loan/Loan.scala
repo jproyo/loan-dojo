@@ -7,7 +7,7 @@ import edu.jproyo.dojos.loan.data.DataLoader
 import scala.collection.immutable.ListMap
 
 case class Condition(amountRequested: Int, rate: Double, monthlyRepayment: Double, totalRepayment: Double) {
-  override def toString: String =
+  def pretttyPrint: String =
     s"""
 Requested amount: $amountRequested
 Rate: ${"%.1f".format(rate * 100)}%%
@@ -51,6 +51,11 @@ case class Loan(lenders: Set[Lender]) extends LoanService{
     if (eleg.foldLeft(0)((acc, e) => acc + e.available) >= amount) Some(eleg) else None
   }
 
+  /**
+    * Elegible Lenders for this amount
+    * @param amount
+    * @return
+    */
   def elegibles(amount: Int): List[Lender] = {
     (lendersGroupByRate.map(_._2).flatten.foldLeft(((List[Lender](), amount)))(takeElegibles))._1
   }
