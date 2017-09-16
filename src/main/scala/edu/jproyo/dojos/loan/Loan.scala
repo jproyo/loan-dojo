@@ -4,17 +4,25 @@ import edu.jproyo.dojos.loan.calc.Calculator
 import edu.jproyo.dojos.loan.calc.calc.monthlyCompoundInterest
 import edu.jproyo.dojos.loan.data.DataLoader
 
-import scala.annotation.tailrec
 import scala.collection.immutable.ListMap
 
-case class Condition(amountRequested: Int, rate: Double, monthlyRepayment: Double, totalRepayment: Double)
+case class Condition(amountRequested: Int, rate: Double, monthlyRepayment: Double, totalRepayment: Double) {
+  override def toString: String =
+    s"""
+Requested amount: $amountRequested
+Rate: ${"%.1f".format(rate * 100)}%%
+Monthly repayment: ${"%.2f".format(monthlyRepayment)}
+Total repayment:  ${"%.2f".format(totalRepayment)}
+  """
+}
+
 case class Lender(name: String, rate: Double, available: Int)
 
 trait LoanService {
   val calculator: Calculator
 }
 
-case class Loan(lenders: Set[Lender]) {
+case class Loan(lenders: Set[Lender]) extends LoanService{
 
   implicit val calculator = monthlyCompoundInterest
 
@@ -27,7 +35,7 @@ case class Loan(lenders: Set[Lender]) {
     *
     * @return
     */
-  lazy val lendersGroupByRate: Map[Double, Set[Lender]] = ListMap((lenders groupBy(_.rate)).toSeq.sortBy(_._1):_*).map( p => p._1 -> p._2.toList.sorted.toSet )
+  lazy val lendersGroupByRate: Map[Double, Set[Lender]] = ListMap((lenders groupBy (_.rate)).toSeq.sortBy(_._1): _*).map(p => p._1 -> p._2.toList.sorted.toSet)
 
 
   /**
@@ -44,8 +52,10 @@ case class Loan(lenders: Set[Lender]) {
   def elegibles(amount: Int): Set[Lender] = {
     (lendersGroupByRate.map(_._2).flatten.foldLeft(((Set[Lender](), amount)))(takeElegibles))._1
   }
+
   /**
     * Helper method
+    *
     * @return
     */
   private def takeElegibles(accLender: (Set[Lender], Int), rateLender: Lender): (Set[Lender], Int) = {
@@ -77,6 +87,7 @@ case class Loan(lenders: Set[Lender]) {
 
   /**
     * Request an amount to be borrowed by one or more lenders at the lowest rate posible
+    *
     * @param amount
     * @return the condition on which the loan should be granted or None if money is not available
     */
@@ -90,6 +101,7 @@ case class Loan(lenders: Set[Lender]) {
 object Loan {
   /**
     * Factory Loan Object Companion
+    *
     * @param loader
     * @return
     */
