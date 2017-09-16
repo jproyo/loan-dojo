@@ -9,9 +9,9 @@ object Loan {
   /**
     * Request an amount to be borrowed by one or more lenders at the lowest rate posible
     * @param amount
-    * @return the condition on which the
+    * @return the condition on which the loan should be granted or None if money is not available
     */
-  def request(amount: Int): Option[Condition] = Some(Condition(amount, 7.0, 34.25, 1233.08))
+  def request(amount: Int): Option[Condition] = None
 
 }
 
