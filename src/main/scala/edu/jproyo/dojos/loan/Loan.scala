@@ -16,7 +16,9 @@ Total repayment:  ${"%.2f".format(totalRepayment)}
   """
 }
 
-case class Lender(name: String, rate: Double, available: Int)
+case class Lender(name: String, rate: Double, available: Int){
+
+}
 
 trait LoanService {
   val calculator: Calculator
@@ -44,13 +46,13 @@ case class Loan(lenders: Set[Lender]) extends LoanService{
     * @param amount
     * @return
     */
-  def elegibleLenders(amount: Int): Option[Set[Lender]] = {
+  def elegibleLenders(amount: Int): Option[List[Lender]] = {
     val eleg = elegibles(amount)
     if (eleg.foldLeft(0)((acc, e) => acc + e.available) >= amount) Some(eleg) else None
   }
 
-  def elegibles(amount: Int): Set[Lender] = {
-    (lendersGroupByRate.map(_._2).flatten.foldLeft(((Set[Lender](), amount)))(takeElegibles))._1
+  def elegibles(amount: Int): List[Lender] = {
+    (lendersGroupByRate.map(_._2).flatten.foldLeft(((List[Lender](), amount)))(takeElegibles))._1
   }
 
   /**
@@ -58,10 +60,10 @@ case class Loan(lenders: Set[Lender]) extends LoanService{
     *
     * @return
     */
-  private def takeElegibles(accLender: (Set[Lender], Int), rateLender: Lender): (Set[Lender], Int) = {
+  private def takeElegibles(accLender: (List[Lender], Int), rateLender: Lender): (List[Lender], Int) = {
     val (acc, amount) = accLender
     if (amount == 0) accLender
-    else if (amount >= rateLender.available) (acc + rateLender, amount - rateLender.available) else accLender
+    else if (amount >= rateLender.available) (acc ++ List(rateLender), amount - rateLender.available) else (acc ++ List(rateLender), 0)
   }
 
   /**
@@ -72,7 +74,7 @@ case class Loan(lenders: Set[Lender]) extends LoanService{
     * @param amount
     * @return
     */
-  def conditionFrom(amount: Int): (Set[Lender]) => Option[Condition] = lenders => {
+  def conditionFrom(amount: Int): (List[Lender]) => Option[Condition] = lenders => {
     Some(calculator.calculate(amount, lenders))
   }
 

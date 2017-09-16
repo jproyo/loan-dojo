@@ -20,13 +20,23 @@ class LoanSuite extends FunSuite{
     assert(Loan().lendersGroupByRate === expected)
   }
 
-  test("test elegibles"){
-    val expected = Set(Lender("Jane",0.069,480), Lender("Fred",0.071,520))
+  test("test elegibles fro 1000"){
+    val expected = List(Lender("Jane",0.069,480), Lender("Fred",0.071,520))
     assert(Loan().elegibles(1000) === expected)
   }
 
-  test("test elegiblesByRate"){
-    val expected = Some(Set(Lender("Jane",0.069,480), Lender("Fred",0.071,520)))
+  test("test elegibles fro 1500"){
+    val expected = List(Lender("Jane",0.069,480), Lender("Fred",0.071,520), Lender("Angela",0.071,60), Lender("Dave", 0.074,140), Lender("Bob",0.075,640))
+    assert(Loan().elegibles(1500) === expected)
+  }
+
+  test("test elegibleLenders for 1000"){
+    val expected = Some(List(Lender("Jane",0.069,480), Lender("Fred",0.071,520)))
     assert(Loan().elegibleLenders(1000) === expected)
+  }
+
+  test("test elegibleLenders for 1500"){
+    val expected =Some(List(Lender("Jane",0.069,480), Lender("Fred",0.071,520), Lender("Angela",0.071,60), Lender("Dave", 0.074,140), Lender("Bob",0.075,640)))
+    assert(Loan().elegibleLenders(1500) === expected)
   }
 }
