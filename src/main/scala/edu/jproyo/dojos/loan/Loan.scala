@@ -6,12 +6,19 @@ case class Loan(lenders: Set[Lender])
 
 object Loan {
 
+  val defaultData = Set[Lender]()
+
+  def apply(): Loan = Loan(defaultData)
+
   /**
     * Request an amount to be borrowed by one or more lenders at the lowest rate posible
     * @param amount
     * @return the condition on which the loan should be granted or None if money is not available
     */
-  def request(amount: Int): Option[Condition] = None
+  def request(amount: Int): Option[Condition] = {
+    require(!lenders.isEmpty, "Lenders data not available")
+    None
+  }
 
 }
 
