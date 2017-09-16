@@ -46,10 +46,15 @@ Total repayment: £1108.10 
 
 ```
 
-
 ## Run Solution
 
-### Without Docker
+There are 3 options to run the solution
+
+### With Binary Executable File
+
+Check out release tag v1.0 from Github [repo at here]()
+
+### With Scala SBT
 
 #### Prerequisites
 
@@ -105,7 +110,7 @@ bash.$ docker run loan-dojo sbt test
 
 ```shell
 bash.$ docker build -t loan-dojo .
-bash.$ docker run loan-dojo FILE.csv AMOUNT
+bash.$ docker run -v COMPLE_PATH/FILE_NAME.csv:/opt/loan-dojo/FILE_NAME.csv loan-dojo /opt/loan-dojo/target/pack/bin/loan-dojo ./FILE_NAME.csv AMOUNT
 ```
 
 #### Run Coverage Report
@@ -114,4 +119,6 @@ bash.$ docker run loan-dojo FILE.csv AMOUNT
 bash.$ docker build -t loan-dojo .
 bash.$ docker run loan-dojo sbt clean coverage test coverageReport
 ```
+
+
 
