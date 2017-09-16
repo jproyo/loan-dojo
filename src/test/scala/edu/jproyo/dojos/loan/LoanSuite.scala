@@ -1,8 +1,10 @@
 package edu.jproyo.dojos.loan
 
 import org.scalatest.FunSuite
-
 import scala.collection.immutable.ListMap
+
+import edu.jproyo.dojos.loan.model._
+
 
 class LoanSuite extends FunSuite{
 

@@ -2,6 +2,8 @@ package edu.jproyo.dojos.loan
 
 import org.scalatest._
 
+import edu.jproyo.dojos.loan.model._
+
 class LoanSpec extends WordSpec with Matchers {
 
   import TestHelper._

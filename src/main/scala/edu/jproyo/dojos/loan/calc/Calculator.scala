@@ -1,6 +1,6 @@
 package edu.jproyo.dojos.loan.calc
 
-import edu.jproyo.dojos.loan.{Condition, Lender}
+import edu.jproyo.dojos.loan.model._
 
 /**
   * Trail Calculator for interest and payments calculations.

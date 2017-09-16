@@ -1,7 +1,9 @@
 package edu.jproyo.dojos.loan
 
 import edu.jproyo.dojos.loan.data.DataLoader
+import edu.jproyo.dojos.loan.model._
 import org.scalactic.Equality
+
 import scala.language.implicitConversions
 
 object TestHelper {

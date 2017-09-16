@@ -1,7 +1,7 @@
 package edu.jproyo.dojos.loan.calc
 
-import edu.jproyo.dojos.loan.{Condition, Lender}
 import org.scalatest.FunSuite
+import edu.jproyo.dojos.loan.model._
 import edu.jproyo.dojos.loan.TestHelper._
 
 class CalculatorSuite extends FunSuite{
