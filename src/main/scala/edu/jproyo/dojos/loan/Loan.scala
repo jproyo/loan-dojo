@@ -7,6 +7,6 @@ object Loan {
     * @param amount
     * @return the condition on which the
     */
-  def request(amount: Int): Option[Condition] = Condition(amount, 7.0, 34.25, 1233.08)
+  def request(amount: Int): Option[Condition] = Some(Condition(amount, 7.0, 34.25, 1233.08))
 
 }
