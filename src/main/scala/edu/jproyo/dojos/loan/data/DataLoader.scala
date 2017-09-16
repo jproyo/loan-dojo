@@ -14,10 +14,17 @@ trait DataLoader {
 
 object DataLoader {
 
-
+  /**
+    * Implementation Loading data from CSV
+    * @param filePath
+    */
   implicit class FileDataLoader(val filePath: String) extends DataLoader{
     import com.github.tototoshi.csv._
 
+    /**
+      * Load data from file.
+      * @return Either -> Left(String with error) | Right(Set[Lender])
+      */
     def loadData: Either[String, Set[Lender]] =
       loadFile.map(CSVReader.open).map(_.allWithHeaders()).map(_.map(Lender(_)).toSet) match {
         case Some(x) => Right(x)

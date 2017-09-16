@@ -2,10 +2,6 @@
 
 [![Build Status](https://travis-ci.org/jproyo/loan-dojo.svg?branch=master)](https://travis-ci.org/jproyo/loan-dojo.svg?branch=master)
 
-## Design Notes
-
-Design Notes [could be found here](./DESIGN.md)
-
 ## Requirements
 
 There is a need for a rate calculation system allowing prospective borrowers to obtain a quote from our pool of lenders for 36 month loans.
@@ -65,7 +61,7 @@ In order to run this solution you are going to need the following distributions 
 #### Run tests
 
 ```shell
-bash.$ sbt it:test test
+bash.$ sbt test
 ```
 
 #### Run Coverage Report
@@ -77,7 +73,7 @@ bash.$ sbt clean coverage test coverageReport
 #### Startup Application with SBT
 
 ```shell
-bash.$ sbt run
+bash.$ sbt "run FILE_PATH.csv AMOUNT"
 ```
 
 #### Package Executable JAR
@@ -89,7 +85,7 @@ bash.$ sbt pack
 ##### Execute JAR
 
 ```shell
-bash.$ ./target/pack/bin/loan-dojo
+bash.$ ./target/pack/bin/loan-dojo FILE.csv AMOUNT
 ```
 
 ### With Docker
