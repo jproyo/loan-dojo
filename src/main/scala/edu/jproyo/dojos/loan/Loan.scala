@@ -8,6 +8,14 @@ case class Lender(name: String, rate: Double, available: Int)
 
 case class Loan(lenders: Set[Lender]) {
 
+  implicit val ordering = new Ordering[Lender] {
+    override def compare(x: Lender, y: Lender) = x.available.compare(y.available)
+  }
+
+  def lendersGroupByRate: Map[Double, List[Lender]] = lenders.toList.sorted groupBy(_.rate)
+
+  def findBestCondition(amount: Int): Option[Condition] = ???
+
   /**
     * Request an amount to be borrowed by one or more lenders at the lowest rate posible
     * @param amount
@@ -15,7 +23,8 @@ case class Loan(lenders: Set[Lender]) {
     */
   def request(amount: Int): Option[Condition] = {
     require(!lenders.isEmpty, "Lenders data not available")
-    None
+    require(amount >= 1000 && amount <= 15000, "Amount should be between 1000 and 15000")
+    findBestCondition(amount)
   }
 }
 
