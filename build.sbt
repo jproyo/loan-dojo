@@ -39,7 +39,7 @@ lazy val root = (project in file("."))
   packAutoSettings ++ Seq(
     packMain := Map(projectName -> mainClassName),
     packJvmOpts := Map(projectName -> Seq("-Xmx2048m")),
-    packGenerateWindowsBatFile := false,
+    packGenerateWindowsBatFile := true,
     packJarNameConvention := "default",
     packExpandedClasspath := false
   )
