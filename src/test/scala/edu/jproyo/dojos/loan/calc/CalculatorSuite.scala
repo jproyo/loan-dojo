@@ -4,8 +4,6 @@ import edu.jproyo.dojos.loan.{Condition, Lender}
 import org.scalatest.FunSuite
 import edu.jproyo.dojos.loan.TestHelper._
 
-import scala.collection.immutable.ListMap
-
 class CalculatorSuite extends FunSuite{
 
   test("test calculate with simple interest"){
@@ -16,6 +14,20 @@ class CalculatorSuite extends FunSuite{
     )
     val expected = Condition(1000, rate = 0.084, monthlyRepayment = 30.18, totalRepayment = 1086.60)
     val calculator = new Calculator {
+      override def interest(amount: Int, rate: Double): Double = amount + (amount * rate)
+    }
+    assert(calculator.calculate(1000, lenders) === expected)
+  }
+
+  test("test calculate with simple interest change period"){
+    val lenders = List(
+      Lender("xx",0.069,300),
+      Lender("yyy",0.081,300),
+      Lender("zzz",0.104,400)
+    )
+    val expected = Condition(1000, rate = 0.084, monthlyRepayment = 45.27, totalRepayment = 1086.60)
+    val calculator = new Calculator {
+      override val period: Int = 24
       override def interest(amount: Int, rate: Double): Double = amount + (amount * rate)
     }
     assert(calculator.calculate(1000, lenders) === expected)
@@ -32,6 +44,17 @@ class CalculatorSuite extends FunSuite{
       override def interest(amount: Int, rate: Double): Double = amount
     }
     assert(calculator.calculate(1000, lenders) === expected)
+  }
+
+  test("test calculate with compound interest default period"){
+    val lenders = List(
+      Lender("xx",0.069,300),
+      Lender("yyy",0.081,300),
+      Lender("zzz",0.104,400)
+    )
+    val expected = Condition(1000, rate = 0.084, monthlyRepayment = 36.02, totalRepayment = 1296.71)
+    import calc._
+    assert(implicitly[Calculator].calculate(1000, lenders) === expected)
   }
 
 
