@@ -10,7 +10,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val commonDeps = Seq(
-  "com.github.kxbmap" %% "configs" % "0.4.4"
+  "com.github.tototoshi" %% "scala-csv" % "1.3.5"
 )
 
 lazy val testing = Seq(
