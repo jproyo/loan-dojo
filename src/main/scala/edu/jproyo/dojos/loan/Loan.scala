@@ -4,6 +4,7 @@ import edu.jproyo.dojos.loan.calc.Calculator
 import edu.jproyo.dojos.loan.calc.calc.monthlyCompoundInterest
 import edu.jproyo.dojos.loan.data.DataLoader
 
+import scala.annotation.tailrec
 import scala.collection.immutable.ListMap
 
 case class Condition(amountRequested: Int, rate: Double, monthlyRepayment: Double, totalRepayment: Double)
@@ -17,9 +18,32 @@ case class Loan(lenders: Set[Lender]) {
 
   implicit val calculator = monthlyCompoundInterest
 
+  /**
+    * Lenders group by rate order from lowest rate to highest
+    *
+    * @return
+    */
   def lendersGroupByRate: ListMap[Double, Set[Lender]] = ListMap((lenders groupBy(_.rate)).toSeq.sortBy(_._1):_*)
 
-  def takeElegibles(amount: Int): (Set[Lender], (Double, Set[Lender])) => Set[Lender] = (lendersAcc, rateLender) => {
+
+  /**
+    * Take all posible lenders from the lower rate to the highest until we could fill up the amount requested
+    *
+    * @param amount
+    * @return
+    */
+  def elegibleLenders(amount: Int): Option[Set[Lender]] = {
+    val elegibles = (lendersGroupByRate foldLeft (Set[Lender]())) (takeElegibles(amount))
+    if (elegibles.foldLeft(0)((acc, e) => acc + e.available) >= amount) Some(elegibles) else None
+  }
+
+  /**
+    * Helper tail recursive method
+    * @param amount
+    * @return
+    */
+  private def takeElegibles(amount: Int): (Set[Lender], (Double, Set[Lender])) => Set[Lender] = (lendersAcc, rateLender) => {
+    @tailrec
     def lendersAcc(acc: Set[Lender], lenders: List[Lender], amountRequested: Int): Set[Lender] = {
       if (amount == 0) acc
       else lenders match {
@@ -30,11 +54,14 @@ case class Loan(lenders: Set[Lender]) {
     lendersAcc(Set(), rateLender._2.toList, amount)
   }
 
-  def elegibleLenders(amount: Int): Option[Set[Lender]] = {
-    val elegibles = (lendersGroupByRate foldLeft Set[Lender]()) (takeElegibles(amount))
-    if (elegibles.foldLeft(0)((acc, e) => acc + e.available) >= amount) Some(elegibles) else None
-  }
-
+  /**
+    * Build a condition based on the elegible lenders obtained.
+    *
+    * Delegate calculation to specific form of calculation
+    *
+    * @param amount
+    * @return
+    */
   def conditionFrom(amount: Int): (Set[Lender]) => Option[Condition] = lenders => {
     Some(calculator.calculate(amount, lenders))
   }
