@@ -2,8 +2,8 @@ package edu.jproyo.dojos.loan.model
 
 case class Lender(name: String, rate: Double, available: Int)
 object Lender {
-  def apply(fields: List[String]): Lender = {
-    Lender(fields(0), fields(1).toDouble, fields(2).toInt)
+  def apply(fields: Map[String,String]): Lender = {
+    Lender(fields("Lender"), fields("Rate").toDouble, fields("Available").toInt)
   }
 }
 

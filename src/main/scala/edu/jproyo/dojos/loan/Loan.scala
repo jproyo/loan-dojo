@@ -99,6 +99,11 @@ object Loan {
     * @param loader
     * @return
     */
-  def apply()(implicit loader: DataLoader): Loan = Loan(loader.loadData)
+  def apply()(implicit loader: DataLoader): Loan = {
+    loader.loadData match {
+      case Right(data) => Loan(data)
+      case Left(error) => throw new IllegalArgumentException(error)
+    }
+  }
 }
 
