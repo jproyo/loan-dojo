@@ -1,5 +1,7 @@
 package edu.jproyo.dojos.loan
 
+import edu.jproyo.dojos.loan.calc.Calculator
+import edu.jproyo.dojos.loan.calc.calc.monthlyCompoundInterest
 import edu.jproyo.dojos.loan.data.DataLoader
 
 import scala.collection.immutable.ListMap
@@ -7,12 +9,13 @@ import scala.collection.immutable.ListMap
 case class Condition(amountRequested: Int, rate: Double, monthlyRepayment: Double, totalRepayment: Double)
 case class Lender(name: String, rate: Double, available: Int)
 
+trait LoanService {
+  val calculator: Calculator
+}
 
 case class Loan(lenders: Set[Lender]) {
 
-  implicit val ordering = new Ordering[Lender] {
-    override def compare(x: Lender, y: Lender) = x.available.compare(y.available)
-  }
+  implicit val calculator = monthlyCompoundInterest
 
   def lendersGroupByRate: ListMap[Double, Set[Lender]] = ListMap((lenders groupBy(_.rate)).toSeq.sortBy(_._1):_*)
 
@@ -33,7 +36,7 @@ case class Loan(lenders: Set[Lender]) {
   }
 
   def conditionFrom(amount: Int): (Set[Lender]) => Option[Condition] = lenders => {
-    Some(Condition(amount,0.0,0.0,0.0))
+    Some(calculator.calculate(amount, lenders))
   }
 
   /**
