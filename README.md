@@ -71,7 +71,7 @@ bash.$ sbt it:test test
 #### Run Coverage Report
 
 ```shell
-bash.$ sbt clean coverage it:test test coverageReport
+bash.$ sbt clean coverage test coverageReport
 ```
 
 #### Startup Application with SBT
@@ -102,7 +102,7 @@ Docker 17.06+
 
 ```shell
 bash.$ docker build -t loan-dojo .
-bash.$ docker run loan-dojo sbt it:test test
+bash.$ docker run loan-dojo sbt test
 ```
 
 #### Run Solution
@@ -116,5 +116,6 @@ bash.$ docker run loan-dojo FILE.csv AMOUNT
 
 ```shell
 bash.$ docker build -t loan-dojo .
-bash.$ docker run loan-dojo sbt clean coverage it:test test coverageReport
+bash.$ docker run loan-dojo sbt clean coverage test coverageReport
 ```
+

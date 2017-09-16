@@ -10,14 +10,12 @@ lazy val commonSettings = Seq(
 )
 
 lazy val commonDeps = Seq(
-  "ch.qos.logback" % "logback-classic" % "1.1.7",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
   "com.github.kxbmap" %% "configs" % "0.4.4"
 )
 
 lazy val testing = Seq(
-  "org.scalatest" %% "scalatest" % "3.0.1" % "it,test",
-  "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "it,test"
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test"
 )
 
 lazy val dependencies = Seq(

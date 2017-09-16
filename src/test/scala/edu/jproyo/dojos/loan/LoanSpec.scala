@@ -15,6 +15,21 @@ class LoanSpec extends WordSpec with Matchers {
       }
     }
 
+    "request £ 1000 and default data" should {
+      "prettyShow print desired result" in {
+        val condition = Loan().request(1000)
+        condition should not be empty
+        val expected =
+          """
+            |Requested amount: £ 1000
+            |Rate: 7.0%%
+            |Monthly repayment: £ 34.25
+            |Total repayment:  £ 1233.08
+          """.stripMargin
+        condition.get.pretttyPrint should equal(expected)
+      }
+    }
+
     "request £ 1500 and default data" should {
       "return loan condition" in {
         val condition = Loan().request(1500)
@@ -37,6 +52,14 @@ class LoanSpec extends WordSpec with Matchers {
         }
         assertThrows[IllegalArgumentException] {
           Loan().request(15001)
+        }
+      }
+    }
+
+    "request without data" should {
+      "throw exception" in {
+        assertThrows[IllegalArgumentException] {
+          Loan(Set()).request(100)
         }
       }
     }
